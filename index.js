@@ -46,11 +46,14 @@ parser.addArgument(['--skip-png'], {
 });
 
 parser.addArgument(['--template'], {
-  defaultValue: ""
+  defaultValue: false
 });
 
 
 let args = parser.parseArgs();
+
+console.log('typeof(args.template)', typeof(args.template))
+console.log('args.template', args.template)
 
 if(!args.deck) {
   die('No deck specified.');
@@ -63,11 +66,20 @@ if(!args.config && process.env.CONFIG) {
 }
 
 if(args.config) {
+  console.log('Reading config from ' + args.config.cyan)
   config = JSON.parse(fs.readFileSync(args.config, 'utf8'));
-  args = _.merge(config, args);
+  Object.keys(config).forEach((key) => {
+    if (!args[key]) {
+      args[key] = config[key]
+    }
+  })
+}
+else {
+  console.log('No config file to load')
 }
 
 if(!args.template) {
+  console.log('Using default template')
   args.template = path.join(__dirname, 'template.html');
 }
 const templateFile = path.resolve(args.template);
