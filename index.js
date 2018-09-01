@@ -146,7 +146,7 @@ function go () {
   scope.deck.is[scope.deck.name] = true;
   scope.loop1 = [1]
 
-  for(var i = 2; i <= 40; i++) {
+  for(var i = 2; i <= 100; i++) {
     scope['loop' + i] = scope['loop' + (i-1)].concat(i)
   }
 
@@ -179,7 +179,9 @@ function go () {
   let pdfPath = path.resolve(path.join(args.output_pdfs_dir, args.prefix + args.deck + '.pdf'));
   let pngPath = path.resolve(path.join(args.output_pngs_dir, args.prefix + args.deck + '.png'));
 
-  const command = spawn('prince', [htmlTTSPath, '-o',  pdfPath]);
+  let cmd = [htmlTTSPath, '-o',  pdfPath]
+  console.log('prince ' + cmd.join(' '))
+  const command = spawn('prince', cmd);
   command.stdout.pipe(process.stdout);
   command.stdout.on('data', (data) => {
     console.log('out:', data.toString())
